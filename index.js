@@ -1,12 +1,20 @@
+const https = require('https');
 const express = require('express')
 const app = express()
+const fs = require('fs');
 
-app.use(express.static('/'))
+const options = {
+    key: fs.readFileSync('./cert/key.pem'),
+    cert: fs.readFileSync('./cert/cert.pem')
+}
 
-app.get('/', (req, res)=>{
-res.send(`<h1>Hello World</h1>`)
+const httpsServer = https.createServer(options, app);
+
+
+app.get('/', (req, res) => {
+    res.send('<h1>Hello world !</h1>')
 })
 
-app.listen(4000, ()=>{
-    console.log(`Server Running on Port 4000`);
-})
+httpsServer.listen(4000, () => {
+    console.log('HTTPS Server running on port 4000');
+});
